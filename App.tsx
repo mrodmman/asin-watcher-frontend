@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ProductDeal, RawData } from './types';
 import Dashboard from './components/Dashboard';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://asin-watcher-pro-back-end.onrender.com/api';
 
 const App: React.FC = () => {
   const [deals, setDeals] = useState<ProductDeal[]>([]);
