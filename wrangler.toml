@@ -1,0 +1,6 @@
+name = "asin-watcher-frontend"
+main = "worker.js"
+compatibility_date = "2025-12-26"
+
+[site]
+bucket = "./dist"
