@@ -1,32 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASIN Watcher Pro</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-<style>
-body { font-family: 'Inter', sans-serif; }
-.brand-font { font-family: 'Dancing Script', cursive; }
-.serif-font { font-family: 'Playfair Display', serif; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASIN Watcher Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@700&family=Playfair+Display: ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    . brand-font { font-family: 'Dancing Script', cursive; }
+    .serif-font { font-family: 'Playfair Display', serif; }
+  </style>
 </head>
 <body class="bg-pink-50 min-h-screen">
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
-```
-
-**The key changes:**
-1. Removed the `importmap` - Vite bundles dependencies automatically
-2. Added `<script type="module" src="/index.tsx"></script>` - This tells Vite where your entry point is
-
-After you commit this change, the build should generate proper JavaScript bundles in the `dist/` folder, and your site will work!
-
-**Commit this change to GitHub** and Cloudflare will automatically rebuild. The build logs should then show it's generating multiple JS files like:
-```
-dist/index.html
-dist/assets/index-abc123.js
-dist/assets/index-def456.css
