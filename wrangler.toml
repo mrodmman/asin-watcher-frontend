@@ -1,6 +1,13 @@
-name = "asin-watcher-frontend"
+\name = "asin-watcher-frontendt2"
 main = "worker.js"
 compatibility_date = "2025-12-26"
 
 [site]
 bucket = "./dist"
+
+[build]
+command = "npm install && npm run build"
+
+[vars]
+VITE_API_URL = "https://asin-watcher-pro-back-end.onrender.com/api"
+VITE_GEMINI_API_KEY = "AIzaSyAlof9y_NEU6PTa5iYllfFhXKzhfAGj0R0"
