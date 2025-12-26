@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ProductDeal, RawData } from './types';
 import Dashboard from './components/Dashboard';
-import ExtensionFiles from './components/ExtensionFiles';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const App: React.FC = () => {
   const [deals, setDeals] = useState<ProductDeal[]>([]);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'extension'>('dashboard');
   const [backendStatus, setBackendStatus] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -122,19 +120,11 @@ const App: React.FC = () => {
               <span className={`w-3 h-3 rounded-full ${backendStatus ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
               <span className="text-gray-600 font-medium">{backendStatus ? 'Connected' : 'Offline'}</span>
             </div>
-            <nav className="flex bg-pink-50 rounded-full p-1 border border-pink-100">
-              <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${activeTab === 'dashboard' ? 'bg-white text-pink-600 shadow-sm' : 'text-pink-400'}`}>Dashboard</button>
-              <button onClick={() => setActiveTab('extension')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${activeTab === 'extension' ? 'bg-white text-pink-600 shadow-sm' : 'text-pink-400'}`}>Extension</button>
-            </nav>
           </div>
         </div>
       </header>
       <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full">
-        {activeTab === 'dashboard' ? (
-          <Dashboard deals={deals} onIngest={handleIngest} onClear={clearData} />
-        ) : (
-          <ExtensionFiles />
-        )}
+        <Dashboard deals={deals} onIngest={handleIngest} onClear={clearData} />
       </main>
     </div>
   );
