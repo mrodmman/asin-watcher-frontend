@@ -1,4 +1,4 @@
-\name = "asin-watcher-frontendt2"
+name = "asin-watcher-frontendt2"
 main = "worker.js"
 compatibility_date = "2025-12-26"
 
