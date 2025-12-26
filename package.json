@@ -1,12 +1,12 @@
 {
   "name": "asin-watcher-frontend",
   "private": true,
-  "version":  "1.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev":  "vite",
+    "dev": "vite",
     "build": "vite build",
-    "deploy": "npm run build && npx wrangler deploy"
+    "deploy": "VITE_API_URL=https://asin-watcher-pro-back-end.onrender.com/api npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "react": "^19.2.3",
