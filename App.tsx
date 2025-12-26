@@ -60,7 +60,7 @@ const App: React.FC = () => {
       code: newData.code || existing?.code,
       discount: newData.discount || existing?.discount,
       lastUpdated: Date.now(),
-      imageUrl: `https://picsum.photos/seed/${newData.asin}/400/400`,
+      imageUrl: newData.imageUrl || existing?.imageUrl || `https://picsum.photos/seed/${newData.asin}/400/400`,
       status: 'Incomplete'
     };
     if (merged.title && merged.price && (merged.code || merged.discount)) {
