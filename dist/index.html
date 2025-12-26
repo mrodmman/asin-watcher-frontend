@@ -11,9 +11,22 @@ body { font-family: 'Inter', sans-serif; }
 .brand-font { font-family: 'Dancing Script', cursive; }
 .serif-font { font-family: 'Playfair Display', serif; }
 </style>
-<script type="importmap">
-{"imports":{"react":"https://esm.sh/react@^19.2.3","react-dom/":"https://esm.sh/react-dom@^19.2.3/","react/":"https://esm.sh/react@^19.2.3/","@google/genai":"https://esm.sh/@google/genai@^1.34.0","html-to-image":"https://esm.sh/html-to-image@1.11.11"}}
-</script>
+  <script type="module" crossorigin src="/assets/main-Dm0znt3c.js"></script>
 </head>
-<body class="bg-pink-50 min-h-screen"><div id="root"></div></body>
+<body class="bg-pink-50 min-h-screen">
+  <div id="root"></div>
+</body>
 </html>
+```
+
+**The key changes:**
+1. Removed the `importmap` - Vite bundles dependencies automatically
+2. Added `` - This tells Vite where your entry point is
+
+After you commit this change, the build should generate proper JavaScript bundles in the `dist/` folder, and your site will work!
+
+**Commit this change to GitHub** and Cloudflare will automatically rebuild. The build logs should then show it's generating multiple JS files like:
+```
+dist/index.html
+dist/assets/index-abc123.js
+dist/assets/index-def456.css
