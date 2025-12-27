@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'aiprompt' | 'script' | 'images' | 'csv'>(
+  const [activeTab, setActiveTab] = useState<'aiprompt' | 'script' | 'images' | 'csv' | 'youtube'>(
     campaign.persona === 'leisureking' ? 'aiprompt' : 'script'
   );
   const [copied, setCopied] = useState<string | null>(null);
@@ -127,6 +127,16 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
               }`}
             >
               📊 CSV Export
+            </button>
+            <button
+              onClick={() => setActiveTab('youtube')}
+              className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
+                activeTab === 'youtube'
+                  ? `bg-white shadow-md ${isLeisureKing ? 'text-purple-600' : 'text-pink-600'}`
+                  : 'text-gray-600 hover:bg-white/50'
+              }`}
+            >
+              🎬 YouTube Content
             </button>
           </div>
         </div>
@@ -310,6 +320,132 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* YouTube Tab */}
+          {activeTab === 'youtube' && campaign.youtubeContent && (
+            <div className="space-y-6">
+              {/* Title Options */}
+              <div className={`rounded-2xl p-6 border-2 ${isLeisureKing ? 'bg-purple-50 border-purple-100' : 'bg-pink-50 border-pink-100'}`}>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">📺 Video Title Options</h3>
+                <p className="text-sm text-gray-600 mb-4">Choose one title for your video. Click to copy!</p>
+                <div className="space-y-3">
+                  {campaign.youtubeContent.titles.map((title, index) => (
+                    <div key={index} className="relative">
+                      <button
+                        onClick={() => handleCopy(title, `title-${index}`)}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                          copied === `title-${index}`
+                            ? 'bg-green-100 border-green-400'
+                            : 'bg-white border-gray-200 hover:border-gray-400'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start gap-4">
+                          <div className="flex-1">
+                            <div className="text-xs font-bold text-gray-500 mb-1">
+                              {index === 0 && 'FORMAT 1: Price Shock'}
+                              {index === 1 && 'FORMAT 2: Emotional Hook'}
+                              {index === 2 && 'FORMAT 3: Direct Value'}
+                              {index === 3 && 'FORMAT 4: Urgency'}
+                              {index === 4 && 'FORMAT 5: Cynical (On Brand)'}
+                            </div>
+                            <div className="font-bold text-gray-800">{title}</div>
+                          </div>
+                          <div className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
+                            copied === `title-${index}`
+                              ? 'bg-green-600 text-white'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {copied === `title-${index}` ? '✓ Copied' : '📋 Copy'}
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-blue-50 rounded-2xl p-6 border-2 border-blue-100">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">📝 Video Description</h3>
+                  <button
+                    onClick={() => handleCopy(campaign.youtubeContent.description, 'description')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700"
+                  >
+                    {copied === 'description' ? '✓ Copied!' : '📋 Copy Description'}
+                  </button>
+                </div>
+                <div className="bg-white rounded-xl p-6">
+                  <pre className="text-gray-800 text-sm whitespace-pre-wrap font-sans">
+                    {campaign.youtubeContent.description}
+                  </pre>
+                </div>
+                <div className="mt-4 text-xs text-gray-600 bg-white rounded-lg p-4">
+                  <strong>💡 Tip:</strong> Copy and paste this directly into your YouTube video description. 
+                  Update the site URL if you're using a custom domain!
+                </div>
+              </div>
+
+              {/* Hashtags */}
+              <div className="bg-green-50 rounded-2xl p-6 border-2 border-green-100">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">#️⃣ Hashtags</h3>
+                  <button
+                    onClick={() => handleCopy(campaign.youtubeContent.hashtags, 'hashtags')}
+                    className="px-4 py-2 bg-green-600 text-white rounded-xl font-bold text-sm hover:bg-green-700"
+                  >
+                    {copied === 'hashtags' ? '✓ Copied!' : '📋 Copy Hashtags'}
+                  </button>
+                </div>
+                <div className="bg-white rounded-xl p-6">
+                  <div className="text-gray-800 font-bold text-lg">
+                    {campaign.youtubeContent.hashtags}
+                  </div>
+                </div>
+                <div className="mt-4 text-xs text-gray-600 bg-white rounded-lg p-4">
+                  <strong>💡 Tip:</strong> YouTube only shows the first 3 hashtags above your video title. 
+                  These are optimized with primary hashtags first, followed by category-specific tags.
+                </div>
+              </div>
+
+              {/* Quick Copy All Section */}
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
+                <h4 className="font-bold text-gray-800 mb-4">⚡ Quick Upload Checklist</h4>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">1️⃣</span>
+                    <div>
+                      <strong>Title:</strong> Choose one from above (copy with one click)
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">2️⃣</span>
+                    <div>
+                      <strong>Description:</strong> Copy the full description (includes disclosure)
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">3️⃣</span>
+                    <div>
+                      <strong>Hashtags:</strong> Add at the end of description or in tags section
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">4️⃣</span>
+                    <div>
+                      <strong>Pin Comment:</strong> "⚠️ This video contains affiliate links. As an Amazon Associate, I earn from qualifying purchases at no extra cost to you."
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">5️⃣</span>
+                    <div>
+                      <strong>Check box:</strong> "Yes, it contains a paid promotion" when uploading
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
