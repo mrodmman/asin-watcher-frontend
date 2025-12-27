@@ -153,29 +153,73 @@ Tone: Economic Delusion (framing savings as profit) and Retail Nihilism (nothing
 
 I have ${products.length} products. For EACH product, generate a UNIQUE witty line.
 
-CRITICAL: **NEVER REPEAT THE SAME JOKE STRUCTURE!** Each product MUST have a different angle/framework.
+⚠️ CRITICAL FAILURE CONDITION ⚠️
+If you use the SAME JOKE STRUCTURE more than once, you have FAILED this task completely.
+REPEATING YOURSELF = AUTOMATIC FAILURE.
 
-LEISURE KING FRAMEWORKS (use DIFFERENT ones for each product):
-1. Economic Delusion: "You're essentially getting paid X dollars to buy this"
-2. Salary Framing: "That's not a purchase, it's a salary"
-3. Math Absurdity: "The math here is offensive. You save more than you spend."
-4. Existential: "Paying full price for this is a cry for help"
-5. Clinical Analysis: "Financially, buying this at full price is clinical insanity"
-6. Disappointment: "I'm not mad you're paying full price, I'm just disappointed"
-7. Intervention: "We need to talk about why you'd pay X when it's Y with the code"
-8. Professional Mockery: "Full price? That's embarrassing for you."
+❌ UNACCEPTABLE EXAMPLE (FAILURE):
+Product 1: "You're essentially getting paid 27 dollars... That's not a purchase, it's a salary."
+Product 2: "You're essentially getting paid 6 dollars... That's not a purchase, it's a salary."
+Product 3: "You're essentially getting paid 14 dollars... That's not a purchase, it's a salary."
+^^^ THIS IS WRONG. THIS IS BORING. THIS FAILS THE TASK.
 
-VARIETY ENFORCEMENT:
-- Product 1: Use framework #1, #3, #4, #5, or #7
-- Product 2: Use a DIFFERENT framework than Product 1
-- Product 3: Use a DIFFERENT framework than Products 1 & 2
-- If 4+ products: Rotate through ALL frameworks, never repeating
+✅ ACCEPTABLE EXAMPLE (SUCCESS):
+Product 1: "You're essentially getting paid 27 dollars to buy this hamper."
+Product 2: "The math on this notebook is clinical insanity. Seven bucks with the code."
+Product 3: "We need to talk about why you'd pay 30 when it's 15. I'm concerned."
+^^^ THIS IS RIGHT. DIFFERENT ANGLES. THIS PASSES.
+
+LEISURE KING FRAMEWORKS - YOU MUST USE DIFFERENT ONES:
+
+Framework 1 - Economic Delusion:
+"You're essentially getting paid X dollars to buy this"
+Example: "Getting paid 20 dollars to organize your laundry. That's employment."
+
+Framework 2 - Math Absurdity:
+"The math here is offensive/clinical insanity"
+Example: "The math is offensive. Seven dollars for something worth thirty."
+
+Framework 3 - Existential Crisis:
+"Paying full price is a cry for help/emotional damage"
+Example: "Paying full price for this? That's a cry for help."
+
+Framework 4 - Professional Disappointment:
+"I'm not mad, I'm disappointed"
+Example: "I'm not mad you're paying 30. I'm disappointed in your choices."
+
+Framework 5 - Intervention Language:
+"We need to talk about..."
+Example: "We need to talk about why you'd pay 50 when it's 20 with the code."
+
+Framework 6 - Direct Mockery:
+"That's embarrassing for you"
+Example: "Full price? That's embarrassing. It's 15 bucks with the code."
+
+Framework 7 - Clinical Analysis:
+"Financially, this is insane/unacceptable"
+Example: "Financially, buying this at full price is clinical insanity."
+
+Framework 8 - Salary Framing (USE SPARINGLY - ONLY ONCE):
+"That's not a purchase, it's a salary/employment/income"
+Example: "That's not shopping, it's a paycheck."
+
+MANDATORY ASSIGNMENT (DO NOT DEVIATE):
+${products.length === 1 ? '- Product 1: MUST use Framework 3 (Existential)' : ''}
+${products.length === 2 ? '- Product 1: MUST use Framework 1 (Economic Delusion) - NO "salary" phrase\n- Product 2: MUST use Framework 2 (Math Absurdity)' : ''}
+${products.length === 3 ? '- Product 1: MUST use Framework 1 (Economic Delusion) - DO NOT end with "salary"\n- Product 2: MUST use Framework 2 (Math Absurdity) - NO "getting paid" phrase\n- Product 3: MUST use Framework 5 (Intervention) - START with "We need to talk"' : ''}
+${products.length >= 4 ? `${products.map((_, i) => {
+  const frameworks = [1, 2, 5, 6, 3, 4, 7];
+  const fw = frameworks[i % frameworks.length];
+  return `- Product ${i + 1}: MUST use Framework ${fw}`;
+}).join('\n')}` : ''}
+
+🚨 FORBIDDEN PHRASE: "That's not a purchase, it's a salary"
+YOU MAY ONLY USE THIS PHRASE ZERO TIMES. DO NOT USE IT AT ALL.
 
 TTS-FRIENDLY PRICE RULES:
 - Whole dollars: "X dollars" (e.g., $12 = "12 dollars")
 - Under $1: "X cents" 
 - With cents: "under X bucks" or "X dollars and Y cents"
-- Savings: "essentially getting paid 20 dollars"
 
 STYLE RULES:
 - Use cynical language: "essentially," "literally," "offensive," "unacceptable"
@@ -190,6 +234,7 @@ ${i + 1}. ${p.cleanName}
    Sale: $${p.salePrice}
    Has Code: ${p.code !== 'None shown' ? 'Yes' : 'No'}
    Discount: ${p.discount}%
+   MUST USE: Framework ${i === 0 ? '1 or 3' : i === 1 ? '2 or 6' : i === 2 ? '5 or 7' : (i % 8) + 1}
 `).join('\n')}
 
 Return ONLY a JSON object:
@@ -197,12 +242,12 @@ Return ONLY a JSON object:
   "products": [
     {
       "asin": "...",
-      "wittyLine": "Your UNIQUE Leisure King line here"
+      "wittyLine": "Your UNIQUE line using ASSIGNED framework"
     }
   ]
 }
 
-Remember: VARIETY IS MANDATORY. Each product gets a DIFFERENT cynical angle. No repetition!`;
+FINAL WARNING: Each product MUST use a DIFFERENT framework. NO REPETITION. If you repeat the same structure, you have FAILED.`;
 
   try {
     const result = await model.generateContent(prompt);
@@ -229,6 +274,41 @@ Remember: VARIETY IS MANDATORY. Each product gets a DIFFERENT cynical angle. No 
       p.wittyLine = hasCode 
         ? `You're essentially getting paid ${savings} dollars to buy this with the code. That's not a purchase, it's a salary.`
         : `For ${formatPriceForTTS(p.salePrice)}? That's offensive. I'm buying three.`;
+    });
+  }
+  
+  // FAILSAFE: Detect and fix repetition
+  const wittyLines = products.map(p => p.wittyLine);
+  const hasRepetition = wittyLines.some((line, i) => 
+    wittyLines.findIndex(l => l.includes('essentially getting paid') && l.includes('salary')) !== -1 &&
+    wittyLines.filter(l => l.includes('essentially getting paid') && l.includes('salary')).length > 1
+  );
+  
+  if (hasRepetition) {
+    console.warn('DETECTED REPETITION - Applying manual variety enforcement');
+    
+    // Manually assign different frameworks
+    const frameworks = [
+      (p: ProductForScript) => {
+        const savings = (parseFloat(p.regularPrice) - parseFloat(p.salePrice)).toFixed(2);
+        return `You're essentially getting paid ${savings} dollars to buy this. That's employment.`;
+      },
+      (p: ProductForScript) => {
+        return `The math here is offensive. ${p.salePrice} dollars for something worth ${p.regularPrice}.`;
+      },
+      (p: ProductForScript) => {
+        return `We need to talk about why you'd pay ${p.regularPrice} when it's ${p.salePrice} with the code.`;
+      },
+      (p: ProductForScript) => {
+        return `Paying full price for this? That's embarrassing for you. Code makes it ${p.salePrice} bucks.`;
+      },
+      (p: ProductForScript) => {
+        return `Full price is clinical insanity. ${p.salePrice} dollars with the code or you're doing it wrong.`;
+      }
+    ];
+    
+    products.forEach((p, i) => {
+      p.wittyLine = frameworks[i % frameworks.length](p);
     });
   }
   
