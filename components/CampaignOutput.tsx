@@ -9,8 +9,12 @@ interface Props {
 }
 
 const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'script' | 'images' | 'csv'>('script');
+  const [activeTab, setActiveTab] = useState<'aiprompt' | 'script' | 'images' | 'csv'>(
+    campaign.persona === 'leisureking' ? 'aiprompt' : 'script'
+  );
   const [copied, setCopied] = useState<string | null>(null);
+  
+  const isLeisureKing = campaign.persona === 'leisureking';
 
   const handleCopy = (text: string, label: string) => {
     copyToClipboard(text);
@@ -57,10 +61,18 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl overflow-y-auto">
       <div className="bg-white rounded-3xl w-full max-w-7xl overflow-hidden shadow-2xl flex flex-col max-h-[95vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-pink-600 to-rose-500 p-6 flex justify-between items-center text-white">
+        <div className={`p-6 flex justify-between items-center text-white ${
+          isLeisureKing 
+            ? 'bg-gradient-to-r from-purple-800 to-purple-600' 
+            : 'bg-gradient-to-r from-pink-600 to-rose-500'
+        }`}>
           <div>
-            <h2 className="text-2xl font-bold">Campaign Generated! 🎉</h2>
-            <p className="text-sm opacity-90">{campaign.products.length} products ready for TikTok</p>
+            <h2 className="text-2xl font-bold">
+              {isLeisureKing ? 'The Leisure King Campaign 👔' : 'Campaign Generated! 🎉'}
+            </h2>
+            <p className="text-sm opacity-90">
+              {campaign.products.length} products ready for {isLeisureKing ? 'AI video generation' : 'TikTok'}
+            </p>
           </div>
           <button 
             onClick={onClose} 
@@ -76,28 +88,81 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 bg-gray-50">
           <div className="flex gap-1 p-2">
-            {[
-              { id: 'script', label: '📝 Script & Summary', icon: '📝' },
-              { id: 'images', label: '🎨 Product & Coupon Images', icon: '🎨' },
-              { id: 'csv', label: '📊 CSV Export', icon: '📊' }
-            ].map(tab => (
+            {isLeisureKing && (
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab('aiprompt')}
                 className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-white text-pink-600 shadow-md'
+                  activeTab === 'aiprompt'
+                    ? 'bg-white text-purple-600 shadow-md'
                     : 'text-gray-600 hover:bg-white/50'
                 }`}
               >
-                {tab.label}
+                🎬 AI Video Prompt
               </button>
-            ))}
+            )}
+            <button
+              onClick={() => setActiveTab('script')}
+              className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
+                activeTab === 'script'
+                  ? `bg-white shadow-md ${isLeisureKing ? 'text-purple-600' : 'text-pink-600'}`
+                  : 'text-gray-600 hover:bg-white/50'
+              }`}
+            >
+              📝 Script & Summary
+            </button>
+            <button
+              onClick={() => setActiveTab('images')}
+              className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
+                activeTab === 'images'
+                  ? `bg-white shadow-md ${isLeisureKing ? 'text-purple-600' : 'text-pink-600'}`
+                  : 'text-gray-600 hover:bg-white/50'
+              }`}
+            >
+              🎨 {isLeisureKing ? 'Coupon Images' : 'Product & Coupon Images'}
+            </button>
+            <button
+              onClick={() => setActiveTab('csv')}
+              className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
+                activeTab === 'csv'
+                  ? `bg-white shadow-md ${isLeisureKing ? 'text-purple-600' : 'text-pink-600'}`
+                  : 'text-gray-600 hover:bg-white/50'
+              }`}
+            >
+              📊 CSV Export
+            </button>
           </div>
         </div>
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-8">
+          {/* AI VIDEO PROMPT TAB (Leisure King only) */}
+          {activeTab === 'aiprompt' && isLeisureKing && campaign.aiVideoPrompt && (
+            <div className="space-y-6">
+              <div className="bg-purple-50 rounded-2xl p-6 border-2 border-purple-100">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">🎬 AI Background Video Prompt</h3>
+                  <button
+                    onClick={() => handleCopy(campaign.aiVideoPrompt!, 'aiprompt')}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold text-sm hover:bg-purple-700"
+                  >
+                    {copied === 'aiprompt' ? '✓ Copied!' : '📋 Copy Prompt'}
+                  </button>
+                </div>
+                <div className="bg-white rounded-xl p-6">
+                  <pre className="text-gray-800 font-mono text-sm whitespace-pre-wrap leading-relaxed">
+                    {campaign.aiVideoPrompt}
+                  </pre>
+                </div>
+                <div className="mt-4 p-4 bg-purple-100 rounded-xl">
+                  <p className="text-sm text-purple-800">
+                    <strong>🎥 Use with:</strong> Kling AI, Veo, Runway, or any AI video generator that accepts text prompts.
+                    Paste this prompt to generate your background video, then overlay your products and text in editing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {/* SCRIPT TAB */}
           {activeTab === 'script' && (
             <div className="space-y-8">
@@ -146,37 +211,39 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
                     {index + 1}. {product.cleanName}
                   </h3>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Product Image */}
-                    <div className="space-y-3">
-                      <h4 className="font-bold text-sm text-gray-700">Product Image</h4>
-                      <div className="relative bg-white rounded-xl p-4 border-2 border-gray-200">
-                        <img 
-                          src={product.imageUrl} 
-                          alt={product.cleanName}
-                          className="w-full h-auto rounded-lg"
-                        />
+                  <div className={`grid grid-cols-1 ${!isLeisureKing ? 'lg:grid-cols-2' : ''} gap-6`}>
+                    {/* Product Image (Girl Math only) */}
+                    {!isLeisureKing && (
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-sm text-gray-700">Product Image</h4>
+                        <div className="relative bg-white rounded-xl p-4 border-2 border-gray-200">
+                          <img 
+                            src={product.imageUrl} 
+                            alt={product.cleanName}
+                            className="w-full h-auto rounded-lg"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleCopyProductImage(product.imageUrl, product.asin)}
+                            className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700"
+                          >
+                            {copied === `product-${product.asin}` ? '✓ Copied!' : '📋 Copy Image'}
+                          </button>
+                          <button
+                            onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
+                            className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
+                          >
+                            ⬇️ Download
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleCopyProductImage(product.imageUrl, product.asin)}
-                          className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700"
-                        >
-                          {copied === `product-${product.asin}` ? '✓ Copied!' : '📋 Copy Image'}
-                        </button>
-                        <button
-                          onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
-                          className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
-                        >
-                          ⬇️ Download
-                        </button>
-                      </div>
-                    </div>
+                    )}
 
                     {/* Coupon Image Generator */}
                     <div className="space-y-3">
                       <h4 className="font-bold text-sm text-gray-700">Coupon Code Image</h4>
-                      <CouponImageGenerator product={product} />
+                      <CouponImageGenerator product={product} persona={campaign.persona} />
                     </div>
                   </div>
                 </div>
