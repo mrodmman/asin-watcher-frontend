@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ProductDeal, CampaignOutput, ProductForScript } from "../types";
-import { generateYouTubeContentForCampaign } from "../services/youtubeContentService";
+import { generateYouTubeContentForCampaign } from "./youtubeContentService";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '');
 
