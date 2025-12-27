@@ -42,6 +42,63 @@ export const copyImage = async (element: HTMLElement) => {
   }
 };
 
+// Copy image from URL (for Amazon product images)
+export const copyImageFromUrl = async (imageUrl: string): Promise<boolean> => {
+  try {
+    // Load image via canvas to bypass CORS
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    return new Promise<boolean>((resolve) => {
+      img.onload = async () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(false);
+            return;
+          }
+          
+          ctx.drawImage(img, 0, 0);
+          
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              resolve(false);
+              return;
+            }
+            
+            try {
+              await navigator.clipboard.write([
+                new ClipboardItem({ 'image/png': blob })
+              ]);
+              resolve(true);
+            } catch (clipboardError) {
+              console.error('Clipboard failed:', clipboardError);
+              resolve(false);
+            }
+          }, 'image/png');
+        } catch (canvasError) {
+          console.error('Canvas failed:', canvasError);
+          resolve(false);
+        }
+      };
+      
+      img.onerror = () => {
+        console.error('Image load failed');
+        resolve(false);
+      };
+      
+      img.src = imageUrl;
+    });
+  } catch (error) {
+    console.error('Copy from URL failed:', error);
+    return false;
+  }
+};
+
 // Copy text to clipboard
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
