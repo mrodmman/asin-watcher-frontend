@@ -66,7 +66,7 @@ const generateTitles = (product: ProductForScript): string[] => {
  */
 const generateDescription = (
   product: ProductForScript,
-  siteUrl: string = 'https://nihlist-amz.mathias2413.workers.dev'
+  siteUrl: string = 'https://retailnihilist.com'
 ): string => {
   const { cleanName, regularPrice, salePrice, discount, code, link } = product;
   const savings = (parseFloat(regularPrice) - parseFloat(salePrice)).toFixed(2);
