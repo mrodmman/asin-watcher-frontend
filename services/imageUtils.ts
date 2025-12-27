@@ -18,6 +18,30 @@ export const downloadImage = async (element: HTMLElement, filename: string) => {
   }
 };
 
+// Copy image to clipboard
+export const copyImage = async (element: HTMLElement) => {
+  try {
+    const dataUrl = await toPng(element, {
+      cacheBust: true,
+      pixelRatio: 2
+    });
+    
+    // Convert data URL to blob
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    
+    // Copy to clipboard
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        'image/png': blob
+      })
+    ]);
+  } catch (error) {
+    console.error('Error copying image:', error);
+    throw error;
+  }
+};
+
 // Copy text to clipboard
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
