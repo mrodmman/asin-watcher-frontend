@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ProductDeal, CampaignOutput, ProductForScript } from "../types";
+import { generateYouTubeContentForCampaign } from "../services/youtubeContentService";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '');
 
@@ -203,11 +204,15 @@ Remember: The witty line must be TTS-friendly, playful, include specific prices,
   );
   const csvContent = `${csvHeader}\n${csvRows.join('\n')}`;
   
+  // Generate YouTube content
+  const youtubeContent = generateYouTubeContentForCampaign(products);
+
   return {
     persona: 'girlmath',
     videoScript,
     editingSummary,
     csvContent,
-    products
+    products,
+    youtubeContent
   };
 };
