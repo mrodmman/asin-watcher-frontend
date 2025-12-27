@@ -39,6 +39,11 @@ export interface CampaignOutput {
   editingSummary: string;
   csvContent: string;
   products: ProductForScript[];
+  youtubeContent?: {
+    titles: string[]; // 5 title options
+    description: string; // Full description ready to paste
+    hashtags: string; // Category-specific hashtags
+  };
 }
 
 export interface CouponImageStyle {
