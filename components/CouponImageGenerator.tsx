@@ -115,6 +115,32 @@ const CouponImageGenerator: React.FC<Props> = ({ product, persona, initialStyle 
     };
   };
 
+  // Dynamic font sizing based on code length
+  const getCodeFontSize = () => {
+    const codeLength = product.code.length;
+    
+    if (isLeisureKing) {
+      // Leisure King: larger default, scales down for long codes
+      if (codeLength <= 8) return '56px';
+      if (codeLength <= 12) return '48px';
+      if (codeLength <= 15) return '40px';
+      return '32px'; // Very long codes
+    } else {
+      // Girl Math: scales similarly
+      if (codeLength <= 8) return '48px';
+      if (codeLength <= 12) return '40px';
+      if (codeLength <= 15) return '32px';
+      return '26px'; // Very long codes
+    }
+  };
+
+  const getCodeLetterSpacing = () => {
+    const codeLength = product.code.length;
+    if (codeLength > 12) return '0px'; // Tight spacing for long codes
+    if (codeLength > 10) return '1px';
+    return style.type === 'brutalist' ? '1px' : '2px';
+  };
+
   return (
     <div className="space-y-4">
       {/* Preview */}
@@ -160,11 +186,14 @@ const CouponImageGenerator: React.FC<Props> = ({ product, persona, initialStyle 
           <div
             style={{
               color: getTextColor(),
-              fontSize: isLeisureKing ? '56px' : '48px',
+              fontSize: getCodeFontSize(),
               fontWeight: '900',
               textAlign: 'center',
               ...getTextStyle(),
-              textShadow: style.type !== 'minimal' && style.type !== 'brutalist' ? '0 4px 20px rgba(0,0,0,0.3)' : 'none'
+              letterSpacing: getCodeLetterSpacing(),
+              textShadow: style.type !== 'minimal' && style.type !== 'brutalist' ? '0 4px 20px rgba(0,0,0,0.3)' : 'none',
+              wordBreak: 'break-all',
+              maxWidth: '90%'
             }}
           >
             {product.code}
