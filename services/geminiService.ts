@@ -119,8 +119,8 @@ WITTY LINE FORMULA:
    - Playful Sarcasm: "Tell your husband it was more expensive"
    - Social Proof: "Everyone's grabbing these right now"
 3. MUST include specific dollar amounts in TTS format (see below)
-4. If code exists, naturally integrate "use this code"
-5. AVOID: "just", "only", "cheap", generic phrases
+4. If code exists, use GENERIC phrases like "use this code", "grab the code", "apply this code" - NEVER say the actual code name
+5. AVOID: "just", "only", "cheap", generic phrases, and NEVER mention the actual code (like A2AWMA3142FVVY)
 
 TTS-FRIENDLY PRICE RULES:
 - Whole dollars: "X dollars" (e.g., $12 = "12 dollars")
@@ -133,7 +133,7 @@ ${products.map((p, i) => `
 ${i + 1}. ${p.cleanName}
    Regular: $${p.regularPrice}
    Sale: $${p.salePrice}
-   Code: ${p.code}
+   Has Code: ${p.code !== 'None shown' ? 'Yes' : 'No'}
    Discount: ${p.discount}%
 `).join('\n')}
 
@@ -147,7 +147,7 @@ Return ONLY a JSON object with this structure:
   ]
 }
 
-Remember: The witty line must be TTS-friendly, playful, include specific prices, and follow girl-math logic.`;
+Remember: The witty line must be TTS-friendly, playful, include specific prices, follow girl-math logic, and use "use this code" NOT the actual code name.`;
 
   try {
     const result = await model.generateContent(prompt);
@@ -175,7 +175,7 @@ Remember: The witty line must be TTS-friendly, playful, include specific prices,
       const hasCode = p.code !== 'None shown';
       
       p.wittyLine = hasCode 
-        ? `Tell your partner it was full price... ${formatPriceForTTS(p.salePrice)} with this code is your little secret.`
+        ? `Tell your partner it was full price... ${formatPriceForTTS(p.salePrice)} with the code is your little secret.`
         : `For ${formatPriceForTTS(p.salePrice)}? That's basically free in girl math.`;
     });
   }
