@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ProductDeal, CampaignOutput, ProductForScript } from "../types";
+import { generateYouTubeContentForCampaign } from "../services/youtubeContentService";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '');
 
@@ -238,12 +239,16 @@ Remember: Cynical, clinical, economic delusion. Make it sound like paying full p
   );
   const csvContent = `${csvHeader}\n${csvRows.join('\n')}`;
   
+  // Generate YouTube content
+  const youtubeContent = generateYouTubeContentForCampaign(products);
+
   return {
     persona: 'leisureking',
     aiVideoPrompt,
     videoScript,
     editingSummary,
     csvContent,
-    products
+    products,
+    youtubeContent
   };
 };
