@@ -127,10 +127,22 @@ export const generateLeisureKingCampaign = async (deals: ProductDeal[]): Promise
   // Get random absurdist scene for AI video
   const scene = getAbsurdistScene();
   
-  // Build AI video prompt
+  // Build the opening line with the scene
+  const openingLine = `I'm not mad you're broke, I'm just disappointed you're paying full price. I'm ${scene.action} ${scene.environment} so you don't have to. Pay attention.`;
+  const closingLine = `Link in bio. Go spend your feelings. I'm busy.`;
+  
+  // Build AI video prompt with dialogue
   const aiVideoPrompt = `Cinematic 9:16 vertical video. A man in his 30s with messy hair wearing a silk bathrobe and oversized clear-frame glasses is ${scene.action} while ${scene.environment}. He is looking directly at the camera with a deadpan, disappointed Ryan Reynolds smirk. Shaky handheld camera footage, 4k, hyper-realistic, moody cinematic lighting.
 
-Seed: 576995276`;
+OPENING DIALOGUE (Character speaks to camera):
+"${openingLine}"
+
+CLOSING DIALOGUE (Character speaks to camera):
+"${closingLine}"
+
+Seed: 576995276
+
+Note: Generate two separate clips - one for opening (5-7 seconds) and one for closing (3-5 seconds). Character maintains disappointed, cynical expression throughout.`;
 
   // Build prompt for Gemini (Leisure King style)
   const prompt = `You are a product-analysis assistant creating cynical, witty video scripts for "The Leisure King" persona.
@@ -204,13 +216,13 @@ Remember: Cynical, clinical, economic delusion. Make it sound like paying full p
   }
   
   // Build video script (Leisure King style)
-  const intro = `I'm not mad you're broke, I'm just disappointed you're paying full price. I'm ${scene.action} ${scene.environment} so you don't have to. Pay attention.`;
+  const intro = openingLine;
   
   const productLines = products.map(p => 
     `This is the ${p.cleanName}. ${p.wittyLine}`
   ).join('\n\n<#0.5#>\n\n');
   
-  const outro = "Link in bio. Go spend your feelings. I'm busy.";
+  const outro = closingLine;
   
   const videoScript = `${intro}\n\n${productLines}\n\n${outro}`;
   
