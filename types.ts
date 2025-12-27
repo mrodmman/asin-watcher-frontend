@@ -30,7 +30,11 @@ export interface ProductForScript {
   wittyLine: string;
 }
 
+export type Persona = 'girlmath' | 'leisureking';
+
 export interface CampaignOutput {
+  persona: Persona;
+  aiVideoPrompt?: string; // Only for Leisure King
   videoScript: string;
   editingSummary: string;
   csvContent: string;
@@ -38,7 +42,7 @@ export interface CampaignOutput {
 }
 
 export interface CouponImageStyle {
-  type: 'gradient' | 'solid' | 'minimal';
+  type: 'gradient' | 'solid' | 'minimal' | 'brutalist';
   primaryColor: string;
   secondaryColor?: string;
   emoji: string;
