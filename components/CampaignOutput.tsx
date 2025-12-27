@@ -37,6 +37,22 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
     }
   };
 
+  const handleCopyProductImage = async (imageUrl: string, asin: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      setCopied(`product-${asin}`);
+      setTimeout(() => setCopied(null), 2000);
+    } catch (error) {
+      alert('Failed to copy image to clipboard');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl overflow-y-auto">
       <div className="bg-white rounded-3xl w-full max-w-7xl overflow-hidden shadow-2xl flex flex-col max-h-[95vh]">
@@ -141,12 +157,20 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
                           className="w-full h-auto rounded-lg"
                         />
                       </div>
-                      <button
-                        onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
-                        className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
-                      >
-                        ⬇️ Download Product Image
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleCopyProductImage(product.imageUrl, product.asin)}
+                          className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700"
+                        >
+                          {copied === `product-${product.asin}` ? '✓ Copied!' : '📋 Copy Image'}
+                        </button>
+                        <button
+                          onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
+                          className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
+                        >
+                          ⬇️ Download
+                        </button>
+                      </div>
                     </div>
 
                     {/* Coupon Image Generator */}
