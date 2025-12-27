@@ -82,49 +82,93 @@ function formatPriceForTTS(price: string): string {
   }
 }
 
-// Helper: Create clean product name
+// Helper: Create clean product name - natural flow, stop at the right point
 function createCleanName(title: string): string {
   if (!title) return "Product";
   
-  const fillers = [
-    /ideal gift/gi,
-    /ages \d+-\d+/gi,
-    /stem/gi,
-    /road trip/gi,
-    /educational/gi,
-    /premium quality/gi,
-    /best seller/gi,
-    /top rated/gi,
-    /new arrival/gi,
-    /limited edition/gi,
-    /exclusive/gi,
-    /upgraded/gi,
-    /improved/gi,
-    /amazon's choice/gi,
-    /highly rated/gi,
-    /\([^)]*\)/g,  // Remove anything in parentheses
-    /\[[^\]]*\]/g,  // Remove anything in brackets
-    /,\s*\d+\s*pack/gi,  // Remove ", 2 Pack" etc at end
-    /,\s*set of \d+/gi,  // Remove ", Set of 2" etc
-  ];
-  
   let clean = title;
-  fillers.forEach(pattern => {
-    clean = clean.replace(pattern, '');
-  });
   
-  // Clean up extra spaces and dashes
+  // Remove parentheses and brackets
+  clean = clean.replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '');
+  
+  // Remove everything after demographic/use-case words
+  clean = clean.replace(/\s+(for|men|women|boys|girls|kids|adults|unisex|male|female)\s+.*$/i, '');
+  
+  // Remove "with..." at the end
+  clean = clean.replace(/\s+with\s+.*$/i, '');
+  
+  // Clean up spaces and dashes
+  clean = clean.replace(/\s*[-,]\s*/g, ' ');
   clean = clean.replace(/\s+/g, ' ').trim();
-  clean = clean.replace(/\s*-\s*/g, ' ').trim();  // Replace dashes with spaces
   
-  // Only truncate if REALLY long (80+ chars), and try to break at a word
-  if (clean.length > 80) {
-    const truncated = clean.substring(0, 80);
-    const lastSpace = truncated.lastIndexOf(' ');
-    clean = (lastSpace > 60 ? truncated.substring(0, lastSpace) : truncated).trim();
+  // Remove duplicate consecutive words (like "Mattress Pad... Mattress Pad")
+  const words = clean.split(' ');
+  const deduped: string[] = [];
+  const recentWords = new Set<string>();
+  
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const lower = word.toLowerCase();
+    
+    // Check if this word appeared in last 3 words
+    const isDuplicate = recentWords.has(lower) && word.length > 3;
+    
+    if (!isDuplicate) {
+      deduped.push(word);
+    }
+    
+    // Maintain sliding window of recent words
+    recentWords.add(lower);
+    if (recentWords.size > 3) {
+      // Remove oldest (we keep last 3)
+      const oldWord = words[i - 3];
+      if (oldWord) recentWords.delete(oldWord.toLowerCase());
+    }
   }
   
-  return clean || title.substring(0, 80);
+  clean = deduped.join(' ');
+  
+  // Split into words for analysis
+  const finalWords = clean.split(' ');
+  
+  // Find natural stopping point
+  let stopIndex = finalWords.length;
+  
+  // Stop after size word if it appears early (within first 5 words)
+  const sizeWords = ['king', 'queen', 'twin', 'full', 'california'];
+  const sizeIndex = finalWords.findIndex((w, i) => 
+    i < 5 && sizeWords.includes(w.toLowerCase())
+  );
+  
+  if (sizeIndex !== -1) {
+    // Keep up to and including the size word
+    stopIndex = Math.min(sizeIndex + 1, 5);
+  } else {
+    // Look for descriptive endpoint (keep useful descriptors like "Fast Drying")
+    const descriptorWords = ['fast', 'quick', 'ultra', 'super', 'heavy', 'light', 'portable'];
+    const descriptorIndex = finalWords.findIndex((w, i) => 
+      i > 2 && i < 7 && descriptorWords.includes(w.toLowerCase())
+    );
+    
+    if (descriptorIndex !== -1) {
+      // Keep descriptor + one more word (e.g., "Fast Drying")
+      stopIndex = Math.min(descriptorIndex + 2, 6);
+    } else {
+      // No special markers, keep first 4-5 words
+      stopIndex = Math.min(5, finalWords.length);
+    }
+  }
+  
+  // Build result
+  let result = finalWords.slice(0, stopIndex).join(' ');
+  
+  // Remove trailing "size" word if present
+  result = result.replace(/\s+size$/i, '');
+  
+  // Clean up
+  result = result.replace(/\s+/g, ' ').trim();
+  
+  return result || title.substring(0, 50);
 }
 
 // Helper: Calculate sale price from discount
