@@ -95,7 +95,17 @@ function createCleanName(title: string): string {
     /premium quality/gi,
     /best seller/gi,
     /top rated/gi,
-    /\([^)]*\)/g
+    /new arrival/gi,
+    /limited edition/gi,
+    /exclusive/gi,
+    /upgraded/gi,
+    /improved/gi,
+    /amazon's choice/gi,
+    /highly rated/gi,
+    /\([^)]*\)/g,  // Remove anything in parentheses
+    /\[[^\]]*\]/g,  // Remove anything in brackets
+    /,\s*\d+\s*pack/gi,  // Remove ", 2 Pack" etc at end
+    /,\s*set of \d+/gi,  // Remove ", Set of 2" etc
   ];
   
   let clean = title;
@@ -103,13 +113,18 @@ function createCleanName(title: string): string {
     clean = clean.replace(pattern, '');
   });
   
+  // Clean up extra spaces and dashes
   clean = clean.replace(/\s+/g, ' ').trim();
+  clean = clean.replace(/\s*-\s*/g, ' ').trim();  // Replace dashes with spaces
   
-  if (clean.length > 50) {
-    clean = clean.substring(0, 50).trim() + '...';
+  // Only truncate if REALLY long (80+ chars), and try to break at a word
+  if (clean.length > 80) {
+    const truncated = clean.substring(0, 80);
+    const lastSpace = truncated.lastIndexOf(' ');
+    clean = (lastSpace > 60 ? truncated.substring(0, lastSpace) : truncated).trim();
   }
   
-  return clean || title.substring(0, 50);
+  return clean || title.substring(0, 80);
 }
 
 // Helper: Calculate sale price from discount
