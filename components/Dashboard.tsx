@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { ProductDeal, RawData } from '../types';
+import React, { useState, useEffect } from 'react';
+import { ProductDeal, RawData, Persona } from '../types';
 import ProductCard from './ProductCard';
 import CampaignOutputView from './CampaignOutput';
-import { generateCampaign } from '../services/geminiService';
+import { generateCampaign } from '../services/campaignGenerator';
 
 interface DashboardProps {
   deals: ProductDeal[];
@@ -14,6 +14,17 @@ const Dashboard: React.FC<DashboardProps> = ({ deals, onIngest, onClear }) => {
   const [selectedAsins, setSelectedAsins] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeCampaign, setActiveCampaign] = useState<any>(null);
+  
+  // Load persona from localStorage or default to girlmath
+  const [persona, setPersona] = useState<Persona>(() => {
+    const saved = localStorage.getItem('asin-watcher-persona');
+    return (saved === 'leisureking' ? 'leisureking' : 'girlmath') as Persona;
+  });
+  
+  // Save persona to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('asin-watcher-persona', persona);
+  }, [persona]);
 
   const toggleSelect = (asin: string) => {
     setSelectedAsins(prev => 
@@ -30,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({ deals, onIngest, onClear }) => {
     
     setIsGenerating(true);
     try {
-      const campaign = await generateCampaign(selectedDeals);
+      const campaign = await generateCampaign(selectedDeals, persona);
       setActiveCampaign(campaign);
       setSelectedAsins([]); 
     } catch (err) {
@@ -50,7 +61,7 @@ const Dashboard: React.FC<DashboardProps> = ({ deals, onIngest, onClear }) => {
     
     setIsGenerating(true);
     try {
-      const campaign = await generateCampaign([deal]);
+      const campaign = await generateCampaign([deal], persona);
       setActiveCampaign(campaign);
     } catch (err) {
       console.error('Generation error:', err);
@@ -63,7 +74,7 @@ const Dashboard: React.FC<DashboardProps> = ({ deals, onIngest, onClear }) => {
   return (
     <div className="space-y-8 pb-32">
       <div className="bg-white rounded-2xl p-6 border border-pink-100 shadow-sm">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-xl font-bold text-gray-800">Deal Hub</h2>
             <p className="text-sm text-gray-500">
@@ -76,6 +87,36 @@ const Dashboard: React.FC<DashboardProps> = ({ deals, onIngest, onClear }) => {
           >
             Clear All
           </button>
+        </div>
+        
+        {/* Persona Toggle */}
+        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+          <span className="text-sm font-bold text-gray-600">Video Style:</span>
+          <div className="flex bg-gray-100 rounded-xl p-1">
+            <button
+              onClick={() => setPersona('girlmath')}
+              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
+                persona === 'girlmath'
+                  ? 'bg-pink-500 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
+            >
+              💖 Girl Math
+            </button>
+            <button
+              onClick={() => setPersona('leisureking')}
+              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
+                persona === 'leisureking'
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
+            >
+              👔 Leisure King
+            </button>
+          </div>
+          <span className="text-xs text-gray-400 ml-2">
+            {persona === 'girlmath' ? 'Homemade video • Girl math vibes' : 'AI-generated • Cynical humor'}
+          </span>
         </div>
       </div>
 
