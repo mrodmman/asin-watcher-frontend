@@ -129,7 +129,7 @@ export const generateLeisureKingCampaign = async (deals: ProductDeal[]): Promise
   
   // Build the opening line with the scene
   const openingLine = `I'm not mad you're broke, I'm just disappointed you're paying full price. I'm ${scene.action} ${scene.environment} so you don't have to. Pay attention.`;
-  const closingLine = `Link in bio. Go spend your feelings. I'm busy.`;
+  const closingLine = `Link in bio with codes and products on Amazon. Go spend your feelings. I'm busy.`;
   
   // Build AI video prompt with dialogue
   const aiVideoPrompt = `Cinematic 9:16 vertical video. A man in his 30s with messy hair wearing a silk bathrobe and oversized clear-frame glasses is ${scene.action} while ${scene.environment}. He is looking directly at the camera with a deadpan, disappointed Ryan Reynolds smirk. Shaky handheld camera footage, 4k, hyper-realistic, moody cinematic lighting.
