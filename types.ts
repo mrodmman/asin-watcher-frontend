@@ -4,6 +4,7 @@ export interface RawData {
   price?: string;
   code?: string;
   discount?: string;
+  imageUrl?: string;
 }
 
 export interface ProductDeal {
@@ -17,23 +18,30 @@ export interface ProductDeal {
   lastUpdated: number;
 }
 
-export interface ProductScriptSegment {
+export interface ProductForScript {
   asin: string;
   cleanName: string;
-  body: string;
-  finalPriceText: string;
-  promoImageUrl?: string;
-  imagePrompt: string;
-  code: string;
-  link: string;
-  regPrice: string;
+  regularPrice: string;
   salePrice: string;
+  code: string;
+  discount: string;
+  imageUrl: string;
+  link: string;
+  wittyLine: string;
 }
 
-export interface GirlMathScript {
-  intro: string;
-  outro: string;
-  products: ProductScriptSegment[];
-  masterCsvContent: string;
-  masterEditingSummary: string;
+export interface CampaignOutput {
+  videoScript: string;
+  editingSummary: string;
+  csvContent: string;
+  products: ProductForScript[];
+}
+
+export interface CouponImageStyle {
+  type: 'gradient' | 'solid' | 'minimal';
+  primaryColor: string;
+  secondaryColor?: string;
+  emoji: string;
+  showProductName: boolean;
+  showDiscount: boolean;
 }
