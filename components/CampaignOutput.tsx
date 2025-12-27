@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CampaignOutput } from '../types';
 import CouponImageGenerator from './CouponImageGenerator';
-import { copyToClipboard, downloadCSV, downloadImage } from '../services/imageUtils';
+import { copyToClipboard, downloadCSV, downloadImage, copyImageFromUrl } from '../services/imageUtils';
 
 interface Props {
   campaign: CampaignOutput;
@@ -43,15 +43,13 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
 
   const handleCopyProductImage = async (imageUrl: string, asin: string) => {
     try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [blob.type]: blob
-        })
-      ]);
-      setCopied(`product-${asin}`);
-      setTimeout(() => setCopied(null), 2000);
+      const success = await copyImageFromUrl(imageUrl);
+      if (success) {
+        setCopied(`product-${asin}`);
+        setTimeout(() => setCopied(null), 2000);
+      } else {
+        alert('Failed to copy image. Image opened in new tab - right-click to copy.');
+      }
     } catch (error) {
       alert('Failed to copy image to clipboard');
     }
