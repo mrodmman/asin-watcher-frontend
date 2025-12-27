@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ProductForScript, CouponImageStyle } from '../types';
-import { downloadImage, colorSchemes, getRandomColorScheme } from '../services/imageUtils';
+import { downloadImage, copyImage, colorSchemes, getRandomColorScheme } from '../services/imageUtils';
 
 interface Props {
   product: ProductForScript;
@@ -10,6 +10,7 @@ interface Props {
 const CouponImageGenerator: React.FC<Props> = ({ product, initialStyle }) => {
   const imageRef = useRef<HTMLDivElement>(null);
   const [downloading, setDownloading] = useState(false);
+  const [copying, setCopying] = useState(false);
   
   const defaultScheme = getRandomColorScheme();
   const [style, setStyle] = useState<CouponImageStyle>({
@@ -33,6 +34,18 @@ const CouponImageGenerator: React.FC<Props> = ({ product, initialStyle }) => {
       alert('Failed to download image');
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!imageRef.current) return;
+    setCopying(true);
+    try {
+      await copyImage(imageRef.current);
+    } catch (error) {
+      alert('Failed to copy image to clipboard');
+    } finally {
+      setCopying(false);
     }
   };
 
@@ -235,13 +248,22 @@ const CouponImageGenerator: React.FC<Props> = ({ product, initialStyle }) => {
         </div>
 
         {/* Download Button */}
-        <button
-          onClick={handleDownload}
-          disabled={downloading}
-          className="w-full bg-pink-600 text-white font-bold py-3 rounded-xl hover:bg-pink-700 disabled:opacity-50"
-        >
-          {downloading ? 'Generating...' : '⬇️ Download Coupon Image'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleCopy}
+            disabled={copying}
+            className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700 disabled:opacity-50"
+          >
+            {copying ? 'Copying...' : '📋 Copy Image'}
+          </button>
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex-1 bg-pink-600 text-white font-bold py-3 rounded-xl hover:bg-pink-700 disabled:opacity-50"
+          >
+            {downloading ? 'Downloading...' : '⬇️ Download'}
+          </button>
+        </div>
       </div>
     </div>
   );
