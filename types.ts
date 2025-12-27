@@ -5,6 +5,7 @@ export interface RawData {
   code?: string;
   discount?: string;
   imageUrl?: string;
+  affiliateLink?: string;
 }
 
 export interface ProductDeal {
@@ -16,6 +17,7 @@ export interface ProductDeal {
   status: 'Ready' | 'Incomplete';
   imageUrl?: string;
   lastUpdated: number;
+  affiliateLink?: string;
 }
 
 export interface ProductForScript {
