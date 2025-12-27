@@ -118,7 +118,7 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
                   : 'text-gray-600 hover:bg-white/50'
               }`}
             >
-              🎨 {isLeisureKing ? 'Coupon Images' : 'Product & Coupon Images'}
+              🎨 Product & Coupon Images
             </button>
             <button
               onClick={() => setActiveTab('csv')}
@@ -211,34 +211,32 @@ const CampaignOutputView: React.FC<Props> = ({ campaign, onClose }) => {
                     {index + 1}. {product.cleanName}
                   </h3>
                   
-                  <div className={`grid grid-cols-1 ${!isLeisureKing ? 'lg:grid-cols-2' : ''} gap-6`}>
-                    {/* Product Image (Girl Math only) */}
-                    {!isLeisureKing && (
-                      <div className="space-y-3">
-                        <h4 className="font-bold text-sm text-gray-700">Product Image</h4>
-                        <div className="relative bg-white rounded-xl p-4 border-2 border-gray-200">
-                          <img 
-                            src={product.imageUrl} 
-                            alt={product.cleanName}
-                            className="w-full h-auto rounded-lg"
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleCopyProductImage(product.imageUrl, product.asin)}
-                            className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700"
-                          >
-                            {copied === `product-${product.asin}` ? '✓ Copied!' : '📋 Copy Image'}
-                          </button>
-                          <button
-                            onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
-                            className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
-                          >
-                            ⬇️ Download
-                          </button>
-                        </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Product Image (Always show) */}
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-sm text-gray-700">Product Image</h4>
+                      <div className="relative bg-white rounded-xl p-4 border-2 border-gray-200">
+                        <img 
+                          src={product.imageUrl} 
+                          alt={product.cleanName}
+                          className="w-full h-auto rounded-lg"
+                        />
                       </div>
-                    )}
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleCopyProductImage(product.imageUrl, product.asin)}
+                          className="flex-1 bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700"
+                        >
+                          {copied === `product-${product.asin}` ? '✓ Copied!' : '📋 Copy Image'}
+                        </button>
+                        <button
+                          onClick={() => handleDownloadProductImage(product.imageUrl, product.asin)}
+                          className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700"
+                        >
+                          ⬇️ Download
+                        </button>
+                      </div>
+                    </div>
 
                     {/* Coupon Image Generator */}
                     <div className="space-y-3">
