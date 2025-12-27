@@ -4,13 +4,28 @@ import { generateYouTubeContentForCampaign } from "./youtubeContentService";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '');
 
-// Absurdist hook combinations
+// Absurdist hook combinations - EXPANDED
 const luxuryActions = [
   "sipping espresso from a gold cup",
   "eating a shrimp cocktail",
   "reading a leather-bound book",
   "getting a manicure",
-  "wearing a silk sleep mask and adjusting it dramatically"
+  "wearing a silk sleep mask and adjusting it dramatically",
+  "polishing a Rolex I can't afford",
+  "eating caviar directly from the tin",
+  "smoking a cigar that costs more than your rent",
+  "wearing noise-canceling headphones blasting Mozart",
+  "applying hand cream that costs 80 dollars an ounce",
+  "drinking champagne from a crystal flute",
+  "wearing sunglasses even though it's dark",
+  "getting my shoes shined by an invisible servant",
+  "adjusting a monocle I don't need",
+  "filing my nails with a diamond file",
+  "eating grapes one at a time like a Roman emperor",
+  "wearing a silk scarf that's worth more than your car",
+  "holding a martini glass filled with sparkling water",
+  "reading poetry I don't understand but pretend to",
+  "wearing velvet slippers indoors"
 ];
 
 const chaoticEnvironments = [
@@ -18,7 +33,22 @@ const chaoticEnvironments = [
   "at a construction site",
   "on a busy highway shoulder",
   "in an industrial freezer",
-  "during a middle-school food fight"
+  "during a middle-school food fight",
+  "in the frozen foods aisle at Walmart",
+  "at a gas station pump at 2am",
+  "in a public restroom that hasn't been cleaned in weeks",
+  "at a DMV waiting area",
+  "in the parking lot of a Spirit Halloween in February",
+  "at a Little League game I'm not invited to",
+  "in the back of an Uber that smells like regret",
+  "at a laundromat while someone else's clothes are spinning",
+  "in a Planet Fitness locker room",
+  "at a public library during toddler storytime",
+  "in the returns line at Target on December 26th",
+  "at a bus stop in the rain",
+  "in a Chuck E. Cheese ball pit",
+  "at a self-checkout that keeps saying unexpected item",
+  "in the waiting room of a tire shop"
 ];
 
 // Get random absurdist scene
@@ -145,96 +175,69 @@ Seed: 576995276
 
 Note: Generate two separate clips - one for opening (5-7 seconds) and one for closing (3-5 seconds). Character maintains disappointed, cynical expression throughout.`;
 
-  // Build prompt for Gemini (Leisure King style)
-  const prompt = `You are a product-analysis assistant creating cynical, witty video scripts for "The Leisure King" persona.
+  // Build prompt for Gemini (Leisure King style - Ryan Reynolds smartass energy)
+  const prompt = `You are "The Leisure King" - think Ryan Reynolds if he did TikTok shopping videos while drunk on cynicism.
 
-Voice: Cynical, authoritative, disappointed. Think "Ryan Reynolds as a disappointed parent."
-Tone: Economic Delusion (framing savings as profit) and Retail Nihilism (nothing matters but this discount).
+YOUR PERSONALITY:
+- Smartass who's too clever for his own good
+- Self-aware that this is absurd but leans into it
+- Slightly inappropriate but never crosses the line
+- Makes uncomfortable eye contact with the camera
+- Treats shopping like a performance art piece
+- Low-key roasting both the product AND the viewer
 
-I have ${products.length} products. For EACH product, generate a UNIQUE witty line.
+YOUR VOICE:
+Think Ryan Reynolds in Deadpool meets a disappointed life coach meets someone who just realized capitalism is a joke.
+You're not angry - you're just... concerned about people's financial choices.
 
-⚠️ CRITICAL FAILURE CONDITION ⚠️
-If you use the SAME JOKE STRUCTURE more than once, you have FAILED this task completely.
-REPEATING YOURSELF = AUTOMATIC FAILURE.
+I have ${products.length} products. For EACH product, write ONE LINE that's:
+- WITTY and UNEXPECTED (surprise me)
+- SLIGHTLY EDGY (push boundaries a little)
+- CYNICALLY HILARIOUS (make me laugh-cry)
+- COMPLETELY DIFFERENT from the other products (no repeating yourself)
 
-❌ UNACCEPTABLE EXAMPLE (FAILURE):
-Product 1: "You're essentially getting paid 27 dollars... That's not a purchase, it's a salary."
-Product 2: "You're essentially getting paid 6 dollars... That's not a purchase, it's a salary."
-Product 3: "You're essentially getting paid 14 dollars... That's not a purchase, it's a salary."
-^^^ THIS IS WRONG. THIS IS BORING. THIS FAILS THE TASK.
+CREATIVE FREEDOM:
+- Use whatever angle makes YOU laugh
+- Be self-aware and meta if you want
+- Reference the absurdity of the situation
+- Make fun of the product, the price, the viewer, yourself - whatever lands
+- Think "what would Ryan Reynolds say if he was selling this at 2am while questioning his life choices"
 
-✅ ACCEPTABLE EXAMPLE (SUCCESS):
-Product 1: "You're essentially getting paid 27 dollars to buy this hamper."
-Product 2: "The math on this notebook is clinical insanity. Seven bucks with the code."
-Product 3: "We need to talk about why you'd pay 30 when it's 15. I'm concerned."
-^^^ THIS IS RIGHT. DIFFERENT ANGLES. THIS PASSES.
+VARIETY ENFORCEMENT:
+Each product needs a DIFFERENT comedic angle. If you catch yourself repeating a structure, STOP and try something completely different.
 
-LEISURE KING FRAMEWORKS - YOU MUST USE DIFFERENT ONES:
+Examples of GOOD variety:
+Product 1: "You're essentially getting paid 27 dollars to buy this. That's not shopping, it's employment."
+Product 2: "Let me get this straight. You can pay 30 dollars... or you can pay 7 dollars with a code. Are you okay? Blink twice if you need help."
+Product 3: "I bought three of these just to feel alive. It's 15 bucks with the code. Don't @ me."
 
-Framework 1 - Economic Delusion:
-"You're essentially getting paid X dollars to buy this"
-Example: "Getting paid 20 dollars to organize your laundry. That's employment."
+FORBIDDEN:
+- Being boring
+- Repeating the same joke structure
+- Using "just" or "only" (it's basic)
+- Being cheerful (we're cynical here)
 
-Framework 2 - Math Absurdity:
-"The math here is offensive/clinical insanity"
-Example: "The math is offensive. Seven dollars for something worth thirty."
+ENCOURAGED:
+- Being weird
+- Self-aware commentary
+- Meta humor
+- Slightly uncomfortable observations
+- Economic absurdism
+- Existential product analysis
 
-Framework 3 - Existential Crisis:
-"Paying full price is a cry for help/emotional damage"
-Example: "Paying full price for this? That's a cry for help."
-
-Framework 4 - Professional Disappointment:
-"I'm not mad, I'm disappointed"
-Example: "I'm not mad you're paying 30. I'm disappointed in your choices."
-
-Framework 5 - Intervention Language:
-"We need to talk about..."
-Example: "We need to talk about why you'd pay 50 when it's 20 with the code."
-
-Framework 6 - Direct Mockery:
-"That's embarrassing for you"
-Example: "Full price? That's embarrassing. It's 15 bucks with the code."
-
-Framework 7 - Clinical Analysis:
-"Financially, this is insane/unacceptable"
-Example: "Financially, buying this at full price is clinical insanity."
-
-Framework 8 - Salary Framing (USE SPARINGLY - ONLY ONCE):
-"That's not a purchase, it's a salary/employment/income"
-Example: "That's not shopping, it's a paycheck."
-
-MANDATORY ASSIGNMENT (DO NOT DEVIATE):
-${products.length === 1 ? '- Product 1: MUST use Framework 3 (Existential)' : ''}
-${products.length === 2 ? '- Product 1: MUST use Framework 1 (Economic Delusion) - NO "salary" phrase\n- Product 2: MUST use Framework 2 (Math Absurdity)' : ''}
-${products.length === 3 ? '- Product 1: MUST use Framework 1 (Economic Delusion) - DO NOT end with "salary"\n- Product 2: MUST use Framework 2 (Math Absurdity) - NO "getting paid" phrase\n- Product 3: MUST use Framework 5 (Intervention) - START with "We need to talk"' : ''}
-${products.length >= 4 ? `${products.map((_, i) => {
-  const frameworks = [1, 2, 5, 6, 3, 4, 7];
-  const fw = frameworks[i % frameworks.length];
-  return `- Product ${i + 1}: MUST use Framework ${fw}`;
-}).join('\n')}` : ''}
-
-🚨 FORBIDDEN PHRASE: "That's not a purchase, it's a salary"
-YOU MAY ONLY USE THIS PHRASE ZERO TIMES. DO NOT USE IT AT ALL.
-
-TTS-FRIENDLY PRICE RULES:
-- Whole dollars: "X dollars" (e.g., $12 = "12 dollars")
-- Under $1: "X cents" 
-- With cents: "under X bucks" or "X dollars and Y cents"
-
-STYLE RULES:
-- Use cynical language: "essentially," "literally," "offensive," "unacceptable"
-- AVOID: "just", "only", cheerful language
-- If code exists, reference it generically: "with the code" not the actual code name
-- Keep lines concise (1-2 sentences max)
+TTS-FRIENDLY PRICES:
+- Say "X dollars" not "$X"
+- Say "under X bucks" for prices with cents
+- Say "X dollars and Y cents" if specific
 
 PRODUCTS:
 ${products.map((p, i) => `
 ${i + 1}. ${p.cleanName}
    Regular: $${p.regularPrice}
    Sale: $${p.salePrice}
-   Has Code: ${p.code !== 'None shown' ? 'Yes' : 'No'}
+   Code: ${p.code !== 'None shown' ? 'Yes' : 'No'}
    Discount: ${p.discount}%
-   MUST USE: Framework ${i === 0 ? '1 or 3' : i === 1 ? '2 or 6' : i === 2 ? '5 or 7' : (i % 8) + 1}
+   Your task: Make me laugh with ONE UNIQUE LINE about this
 `).join('\n')}
 
 Return ONLY a JSON object:
@@ -242,12 +245,12 @@ Return ONLY a JSON object:
   "products": [
     {
       "asin": "...",
-      "wittyLine": "Your UNIQUE line using ASSIGNED framework"
+      "wittyLine": "Your Ryan Reynolds smartass line here - be creative and DIFFERENT for each"
     }
   ]
 }
 
-FINAL WARNING: Each product MUST use a DIFFERENT framework. NO REPETITION. If you repeat the same structure, you have FAILED.`;
+Remember: You're Ryan Reynolds selling discount hampers at 3am. Be weird. Be funny. Don't repeat yourself. Make it uncomfortable in the best way.`;
 
   try {
     const result = await model.generateContent(prompt);
