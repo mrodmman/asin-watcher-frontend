@@ -115,7 +115,7 @@ function processProduct(deal: ProductDeal): ProductForScript {
     code: deal.code || 'None shown',
     discount: deal.discount || '0',
     imageUrl: deal.imageUrl || '',
-    link: `https://www.amazon.com/dp/${deal.asin}`,
+    link: deal.affiliateLink || `https://www.amazon.com/dp/${deal.asin}`,
     wittyLine: ''
   };
 }
